@@ -8,15 +8,16 @@ support Hexo v3.x.
 # Quickstart
 ### 1. Setup hexo & create a blog
 ```sh
-npm install -g hexo //may need sudo
+npm install -g hexo 
 cd ~/my-personal-directory
 hexo init my-blog
 cd my-blog
 npm install
 ```
 ### 2. Install the hexo-post-editor & start things up
+Should install [hexo-pl](https://github.com/tyleryang/hexo-pl.git) first. `hexo-pl` is a 3rd party api platforms.
 ```sh
-npm install --save hexo-post-editor
+npm install --save hexo-pl hexo-post-editor
 hexo server -d
 open http://localhost:4000/editor
 ```

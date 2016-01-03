@@ -1,6 +1,6 @@
 {
   "name": "hexo-post-editor",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "An post editor to edit hexo posts.",
   "main": "index.js",
   "scripts": {
@@ -55,7 +55,6 @@
   },
   "dependencies": {
     "codemirror": "^5.10.0",
-    "hexo-pl": "0.0.1",
     "history": "^1.17.0",
     "image-webpack-loader": "^1.6.2",
     "isomorphic-fetch": "^2.2.0",
