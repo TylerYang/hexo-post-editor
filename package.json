@@ -1,7 +1,7 @@
 {
-  "name": "hexo-editor",
+  "name": "hexo-post-editor",
   "version": "1.0.0",
-  "description": "An editor to edit hexo posts.",
+  "description": "An post editor to edit hexo posts.",
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=development && gulp dev && webpack-dev-server --hot --inline --colors --progress",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tyleryang/hexo-editor.git"
+    "url": "https://github.com/tyleryang/hexo-post-editor.git"
   },
   "keywords": [
     "hexo",
@@ -20,9 +20,9 @@
   ],
   "author": "Tyler Yang <tyler.z.yang@gmail.com>",
   "bugs": {
-    "url": "https://github.com/tyleryang/hexo-editor/issues"
+    "url": "https://github.com/tyleryang/hexo-post-editor/issues"
   },
-  "homepage": "http://tyleryang.github.io/hexo-editor",
+  "homepage": "http://tyleryang.github.io/hexo-post-editor",
   "license": "ISC",
   "devDependencies": {
     "babel": "^6.3.13",

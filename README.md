@@ -14,17 +14,17 @@ hexo init my-blog
 cd my-blog
 npm install
 ```
-### 2. Install the hexo-editor & start things up
+### 2. Install the hexo-post-editor & start things up
 ```sh
-npm install --save hexo-editor
+npm install --save hexo-post-editor
 hexo server -d
 open http://localhost:4000/editor
 ```
 
 ### 3. Contribute!
 - let me know how it can be improved in the [github
-  issues](https://github.com/tyleryang/hexo-editor/issues)
-- [fork](https://github.com/tyleryang/hexo-editor) and pull-request
+  issues](https://github.com/tyleryang/hexo-post-editor/issues)
+- [fork](https://github.com/tyleryang/hexo-post-editor) and pull-request
 
 # Credits
 
