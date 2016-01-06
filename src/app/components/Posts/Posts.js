@@ -65,7 +65,7 @@ class Posts extends React.Component {
     ).then((response) => {
       if(response.succeed === true) {
         this.setState({
-          posts: response.data
+          posts: _.sortBy(response.data, 'updated').reverse()
         });
       } else {
         //handle error here...
@@ -148,7 +148,31 @@ class Posts extends React.Component {
     var posts = this.state.posts;
     posts[idx] = post;
     this.setState({
-      posts: posts
+      posts: _.sortBy(posts, 'updated').reverse(),
+      selectedIndex: 1
+    });
+  }
+  createPost(title) {
+    fetch(postUrl, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      },
+      body: serialize({
+        title: title,
+        _content: ' '
+      })
+    }).then(
+      (response) => response.json()
+    ).then((response) => {
+      if(response.succeed === true) {
+        let newPosts = response.data;
+        this.setState({
+          posts: _.sortBy(newPosts, 'updated').reverse(),
+          selectedIndex: newPosts.length
+        });
+      }
     });
   }
   render() {
@@ -174,12 +198,13 @@ class Posts extends React.Component {
           onRequestClose={this.handleRequestClose.bind(this)}/>
        );
     }
+    console.log(this.state.selectedIndex);
 
     return (
       <div className="post-ctner">
-        <SplitPane split="vertical" minSize="10" defaultSize="300">
+        <SplitPane split="vertical" minSize="1" defaultSize="300">
           <div>
-            <PostLists show={this.state.showList} selectedIndex={this.state.selectedIndex}
+            <PostLists onCreateNewPost={this.createPost.bind(this)} show={this.state.showList} selectedIndex={this.state.selectedIndex}
               handleSelectItem={this.handleSelectItem.bind(this)}
               posts={this.state.posts}
               onHide={this.hideList}

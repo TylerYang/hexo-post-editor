@@ -49,7 +49,7 @@ class PostContent extends React.Component {
     let contentHTML = createMarkup(parseMarkdown(this.state._content));
     return (
       <SplitPane split="vertical" onChange={this.handlePaneSizeChange.bind(this)}
-        minSize="150">
+        minSize="1">
         <PostEditor _content={this.state._content} width={this.state.editorWidth}
           onSave={this.props.onSave} _id={this.state._id}
           onChange={this.handleContentChange.bind(this)}/>
