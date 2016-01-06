@@ -26,6 +26,7 @@ open http://localhost:4000/editor
 - let me know how it can be improved in the [github
   issues](https://github.com/tyleryang/hexo-post-editor/issues)
 - [fork](https://github.com/tyleryang/hexo-post-editor) and pull-request
+- Please use the `.editorconfig`, `.eslintrc` configurations in your editor to ensure proper formatting.
 
 # Credits
 

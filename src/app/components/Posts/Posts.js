@@ -4,6 +4,7 @@ import { default as SplitPane } from 'react-split-pane';
 import { Snackbar } from 'material-ui/lib/';
 import { default as PostLists } from './PostLists';
 import { default as PostContent } from './PostContent';
+import { serialize } from '../../helpers';
 import { default as _ } from 'underscore';
 require('./splitPane.less');
 
@@ -21,6 +22,12 @@ const _msgObj = {
   'saved': {
     open: true,
     message: 'Your Post Have Been Saved Successfully!',
+    action: '',
+    autoHideDuration: 800
+  },
+  'failed': {
+    open: true,
+    message: 'Failed To Save Your Post Due To Some Exceptions!',
     action: '',
     autoHideDuration: 800
   },
@@ -48,6 +55,7 @@ class Posts extends React.Component {
     this.state = {
       posts: [],
       selectedIndex: 1,
+      showList: true,
       snackType: 'close'
     };
   }
@@ -71,29 +79,45 @@ class Posts extends React.Component {
     });
   }
   handleChange(content) {
+    //text change save is lazy, should pass id as parameter or will intro async bug.
     let post = this.getCurrPost();
-    post._content = content;
-
     this.lazySave(post._id, content);
   }
   savePost(id, content) {
     fetch(postUrl + '/' + id, {
-      method: 'post',
-      body: JSON.stringify({
+      method: 'put',
+      headers: {
+        'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      },
+      body: serialize({
         _content: content
       })
     }).then(
       (response) => response.json()
-    ).then((data) => {
-      console.log(data);
-      this.showSnackBar('saved');
+    ).then((response) => {
+      if(response.succeed === true) {
+        this.setPost(response.data);
+        this.showSnackBar('saved');
+      } else {
+        this.showSnackBar('failed');
+      }
     });
   }
-  handleSave(content) {
-    let post = this.getCurrPost();
-    post._content = content;
+  handleSave(id, content) {
+    if(content === undefined) {
+      content = id;
+      let post = this.getCurrPost();
+      post._content = content;
+      id = post._id;
+    }
     this.showSnackBar('saving');
-    this.savePost(post._id, content);
+    this.savePost(id, content);
+  }
+  hideList(e) {
+    this.setState({
+      showList: false
+    });
   }
   showSnackBar(type) {
     this.setState({
@@ -116,6 +140,16 @@ class Posts extends React.Component {
   }
   getCurrPost() {
     return this.state.posts[this.state.selectedIndex - 1];
+  }
+  setPost(post) {
+    var idx = _.findIndex(this.state.posts, (obj) => {
+        return post._id === obj._id;
+    });
+    var posts = this.state.posts;
+    posts[idx] = post;
+    this.setState({
+      posts: posts
+    });
   }
   render() {
     let currPost = (<div></div>);
@@ -140,13 +174,16 @@ class Posts extends React.Component {
           onRequestClose={this.handleRequestClose.bind(this)}/>
        );
     }
+
     return (
       <div className="post-ctner">
-        <SplitPane split="vertical" minSize="150" defaultSize="300">
+        <SplitPane split="vertical" minSize="10" defaultSize="300">
           <div>
-            <PostLists selectedIndex={this.state.selectedIndex}
+            <PostLists show={this.state.showList} selectedIndex={this.state.selectedIndex}
               handleSelectItem={this.handleSelectItem.bind(this)}
-              posts={this.state.posts} />
+              posts={this.state.posts}
+              onHide={this.hideList}
+              />
           </div>
           {currPost}
         </SplitPane>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, List, ListItem } from 'material-ui/lib/';
+import { Avatar, List, ListItem, IconButton } from 'material-ui/lib/';
 import { SelectableContainerEnhance } from 'material-ui/lib/hoc/selectable-enhance';
 import * as editorTheme from '../../settings/theme';
 
@@ -9,11 +9,21 @@ function trimMarkup(str) {
   return str.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
+let styles = {
+  leftIcon: {
+    position: 'absolute',
+    top: '50%',
+    right: 0,
+    marginTop: '-10px'
+  }
+};
+
 class PostLists extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedIndex: this.props.selectedIndex
+      selectedIndex: this.props.selectedIndex,
+      show: this.props.show
     };
   }
   handleUpdateSelectedIndex(e, index) {
@@ -44,6 +54,8 @@ class PostLists extends React.Component {
           subheader="All Posts">
           {postList}
         </SelectableList>
+
+        <IconButton onClick={this.props.onHide} style={styles.leftIcon} iconClassName="fa fa-angle-left" />
       </div>
     );
   }

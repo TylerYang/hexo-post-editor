@@ -4,6 +4,8 @@ var eslint = require('gulp-eslint');
 var del = require('del');
 var webpack = require('gulp-webpack');
 var htmlreplace = require('gulp-html-replace');
+var less =require('gulp-less');
+var concat = require('gulp-concat');
 
 var webpackDevConf = require('./webpack.config');
 var webpackProdConf = require('./webpack.production.config');
@@ -29,6 +31,15 @@ gulp.task('clean', function() {
     return del.sync(['./dist/**/*']);
 });
 
+//Tyler: don't need watch task cuz' dynamic gen styles
+//       means it should be combinded to react component(webpack loader);
+gulp.task('convert-less', function() {
+    return gulp.src(['./src/less/font-awesome/font-awesome.less'])
+        .pipe(less())
+        .pipe(concat('main.css'))
+        .pipe(gulp.dest('./dist/'));
+});
+
 gulp.task('html-prod', function() {
     return gulp.src('./src/index.html')
         .pipe(htmlreplace({
@@ -48,12 +59,19 @@ gulp.task('html-dev', function() {
 });
 
 gulp.task('copy-images', function() {
-    return gulp.src('./src/images/**/*')
-        .pipe(gulp.dest('dist/'));
+    return gulp.src(['./src/images/*',])
+        .pipe(gulp.dest('dist/images/'));
 });
+
+gulp.task('copy-fonts', function() {
+    return gulp.src(['./src/fonts/*',])
+        .pipe(gulp.dest('dist/fonts/'));
+});
+
+gulp.task('copy-static', ['copy-images', 'copy-fonts']);
 
 gulp.task('default', ['eslint', 'test']);
 
-gulp.task('build', ['eslint', 'test', 'clean', 'webpack-prod', 'html-prod']);
+gulp.task('build', ['convert-less', 'eslint', 'test', 'clean', 'webpack-prod', 'html-prod', 'copy-static']);
 
-gulp.task('dev', ['clean', 'html-dev']);
+gulp.task('dev', ['clean', 'convert-less', 'html-dev', 'copy-static']);

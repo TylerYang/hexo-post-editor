@@ -24,10 +24,12 @@ class PostContent extends React.Component {
     };
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      _content: nextProps._content,
-      _id: nextProps._id
-    });
+    if(this.props._content !== nextProps._content) {
+      this.setState({
+        _content: nextProps._content,
+        _id: nextProps._id
+      });
+    }
   }
   handleContentChange(newContent) {
     if(newContent === this.state._content) {
