@@ -1,7 +1,7 @@
 import React from 'react';
+import { Motion, spring } from 'react-motion';
 import { default as fetch } from 'isomorphic-fetch';
-import { default as SplitPane } from 'react-split-pane';
-import { Snackbar } from 'material-ui/lib/';
+import { Snackbar, FloatingActionButton} from 'material-ui/lib/';
 import { default as PostLists } from './PostLists';
 import { default as PostContent } from './PostContent';
 import { serialize } from '../../helpers';
@@ -45,6 +45,44 @@ const _msgObj = {
   }
 };
 
+const styles = {
+  postCtner: {
+    height: '100%',
+    overflow: 'scroll'
+  },
+  listCtner: {
+    display: 'inline-block',
+    height: '100%'
+  },
+  contentCtner: {
+    display: 'inline-block',
+    position: 'absolute',
+    height: '100%'
+  },
+  leftIcon: {
+    position: 'fixed',
+    top: '50%',
+    marginTop: '-55px',
+    left: '270px'
+  },
+  listBtnCtner: {
+    textAlign: 'center'
+  },
+  rightBtn: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: '-55px',
+    marginLeft: '-19px'
+  },
+  listBtn: {
+    marginTop: '10px',
+    width: '100%'
+  },
+  listIcon: {
+    color: 'white'
+  }
+};
+
 function getMsgByType(type) {
   return _msgObj[type];
 }
@@ -56,7 +94,8 @@ class Posts extends React.Component {
       posts: [],
       selectedIndex: 1,
       showList: true,
-      snackType: 'close'
+      snackType: 'close',
+      mode: 'view'
     };
   }
   componentDidMount() {
@@ -71,7 +110,7 @@ class Posts extends React.Component {
         //handle error here...
       }
     });
-    this.lazySave = _.debounce(this.handleSave, 1000);
+    this.lazySave = _.debounce(this.handleSave, 5000);
   }
   handleSelectItem(index) {
     this.setState({
@@ -114,9 +153,10 @@ class Posts extends React.Component {
     this.showSnackBar('saving');
     this.savePost(id, content);
   }
-  hideList(e) {
+  toggleList(e) {
+    const mod = this.state.mode === 'view' ? 'edit': 'view';
     this.setState({
-      showList: false
+      mode: mod
     });
   }
   showSnackBar(type) {
@@ -175,6 +215,40 @@ class Posts extends React.Component {
       }
     });
   }
+  renderPostList(currPost, interStyle) {
+    let postList = null;
+    if(interStyle.x < 100) {
+      postList = (
+        <div style={styles.listBtnCtner}>
+          <FloatingActionButton mini={true}
+            onClick={this.toggleList.bind(this)} style={_.extend(styles.listIcon, styles.rightBtn)} iconClassName="fa fa-angle-right" />
+        </div>
+      );
+    } else if(interStyle.x > 100) {
+      const opa = interStyle.x / 300;
+      postList = (
+        <div style={{opacity: opa}}>
+          <PostLists onCreateNewPost={this.createPost.bind(this)} show={this.state.showList} selectedIndex={this.state.selectedIndex}
+            handleSelectItem={this.handleSelectItem.bind(this)}
+            posts={this.state.posts}
+            />
+          <FloatingActionButton mini={true}
+            onClick={this.toggleList.bind(this)} style={styles.leftIcon} iconClassName="fa fa-angle-left" />
+        </div>
+      );
+    }
+    return (
+      <div>
+        <div style={_.extend(styles.listCtner, {width: interStyle.x + 'px'})}>
+          {postList}
+        </div>
+        <div style={_.extend(styles.contentCtner, {width: 'calc(100% - ' + interStyle.x + 'px)'})}>
+          {currPost}
+        </div>
+      </div>
+    );
+  }
+
   render() {
     let currPost = (<div></div>);
     if(this.state.posts.length > 0) {
@@ -200,17 +274,10 @@ class Posts extends React.Component {
     }
 
     return (
-      <div className="post-ctner">
-        <SplitPane split="vertical" minSize="1" defaultSize="300">
-          <div>
-            <PostLists onCreateNewPost={this.createPost.bind(this)} show={this.state.showList} selectedIndex={this.state.selectedIndex}
-              handleSelectItem={this.handleSelectItem.bind(this)}
-              posts={this.state.posts}
-              onHide={this.hideList}
-              />
-          </div>
-          {currPost}
-        </SplitPane>
+      <div style={styles.postCtner} className='post-ctner'>
+        <Motion style={{x: spring(this.state.mode === 'view' ? 50: 300)}}>
+          {this.renderPostList.bind(this, currPost)}
+        </Motion>
         {snackbar}
       </div>
     );
