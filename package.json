@@ -1,6 +1,6 @@
 {
   "name": "hexo-post-editor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An post editor to edit hexo posts.",
   "main": "index.js",
   "scripts": {
