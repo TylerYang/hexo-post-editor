@@ -74,11 +74,12 @@ class PostLists extends React.Component {
 
     return (
       <div style={styles.listCtner}>
-        <TextField onEnterKeyDown={this.createNewPost.bind(this)} underlineFocusStyle={{borderColor: Colors.amber900}}
+        <TextField onEnterKeyDown={this.createNewPost.bind(this)}
+          underlineFocusStyle={{borderColor: Colors.amber900}}
           style={styles.input} hintText="Create New Post" />
+
         <SelectableList valueLink={{value: this.state.selectedIndex,
-          requestChange: this.handleUpdateSelectedIndex.bind(this)}}
-        >
+          requestChange: this.handleUpdateSelectedIndex.bind(this)}}>
           {postList}
         </SelectableList>
 

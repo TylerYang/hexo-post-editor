@@ -37,8 +37,9 @@ class PostEditor extends React.Component {
   componentDidUpdate(prevProps) {
     if(prevProps._content !== this.props._content &&
        this.props._content !== this.cm.getValue()) {
-      this.cm.setValue(this.props._content);
+       this.cm.setValue(this.props._content);
     }
+    this.cm.focus();
   }
   componentWillReceiveProps(nextProps) {
     if(nextProps.width !== undefined) {

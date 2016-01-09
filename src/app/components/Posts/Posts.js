@@ -170,7 +170,7 @@ class Posts extends React.Component {
         let newPosts = response.data;
         this.setState({
           posts: _.sortBy(newPosts, 'updated').reverse(),
-          selectedIndex: newPosts.length
+          selectedIndex: 1
         });
       }
     });
@@ -198,7 +198,6 @@ class Posts extends React.Component {
           onRequestClose={this.handleRequestClose.bind(this)}/>
        );
     }
-    console.log(this.state.selectedIndex);
 
     return (
       <div className="post-ctner">
